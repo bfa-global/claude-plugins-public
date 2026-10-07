@@ -1,0 +1,15 @@
+{
+  "name": "bfa-global-plugins",
+  "description": "BFA Global's public Claude plugins, for BFA contractors who use their own Claude plan.",
+  "owner": {
+    "name": "BFA Global",
+    "url": "https://github.com/bfa-global"
+  },
+  "plugins": [
+    {
+      "name": "cloud-brain-bfa",
+      "source": "./plugins/cloud-brain-bfa",
+      "description": "The BFA wiki (BFA Brain): search what it knows and add meetings, mail, documents and conversations to it."
+    }
+  ]
+}
