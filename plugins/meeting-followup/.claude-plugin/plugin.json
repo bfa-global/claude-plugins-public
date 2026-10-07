@@ -1,0 +1,7 @@
+{
+  "name": "meeting-followup",
+  "displayName": "Meeting follow-up",
+  "version": "1.0.0",
+  "description": "Turns a meeting that just happened into its follow-up: what was agreed, with an owner and a date on each item, the open questions, and a drafted email or Slack message for you to review and send. Reads your own meeting notes, Calendar and Gmail.",
+  "author": { "name": "BFA Global", "url": "https://github.com/bfa-global" }
+}

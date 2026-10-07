@@ -1,0 +1,7 @@
+{
+  "name": "meeting-prep",
+  "displayName": "Meeting prep",
+  "version": "1.0.0",
+  "description": "Prepares you for one meeting on your calendar: who is in the room, what was agreed last time, what is still open, and the two or three things worth deciding or asking. Reads your own Calendar, Gmail, Drive and meeting notes.",
+  "author": { "name": "BFA Global", "url": "https://github.com/bfa-global" }
+}
