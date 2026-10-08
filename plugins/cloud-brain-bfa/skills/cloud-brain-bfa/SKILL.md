@@ -1,9 +1,20 @@
 ---
 name: cloud-brain-bfa
-description: Work with the user's BFA wiki (BFA Brain, the cloud-brain deployment for BFA Global) over MCP (the `wiki_*` tools): answer questions from what the wiki already knows, and capture new sources into it so the wiki's own ingest can write the pages. Use this whenever the user asks what the wiki or "the brain" knows about something, wants a meeting, email thread, document, article or conversation remembered or "added to the wiki", asks what they have missed lately, wants to update or remove something they submitted, or mentions the wiki, ingest, submit, a source id, or a job id, even when they do not name the tools.
+description: >-
+  Work with the user's BFA wiki (BFA Brain, the cloud-brain deployment for BFA Global) over MCP
+  (the `wiki_*` tools): answer questions from what the wiki already knows, and capture new sources
+  into it so the wiki's own ingest can write the pages. Use this whenever the user asks what the
+  wiki or "the brain" knows about something, wants a meeting, email thread, document, article or
+  conversation remembered or "added to the wiki", asks what they have missed lately, wants to
+  update or remove something they submitted, or mentions the wiki, ingest, submit, a source id, or
+  a job id, even when they do not name the tools.
+metadata:
+  version: "1.4.2"
 ---
 
 # The BFA wiki
+
+This is version 1.4.2 of the BFA wiki skill. When the user asks which version of the skill they have, tell them this number.
 
 The wiki is a knowledge base that the wiki's ingest writes and a person steers. You are the person's hands: you decide what is worth keeping, you hand the source text over, and you answer questions from what is there. The wiki's own ingest, running on the server, reads every source you submit and writes or revises the pages. You never write a page. What the wiki ends up saying about a source is the pipeline's decision, the same as for any other source it has taken in. That split is what keeps every claim traceable to a source and every page consistent with the ones around it.
 
