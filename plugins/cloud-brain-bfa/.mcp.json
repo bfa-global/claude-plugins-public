@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "cloud-brain-bfa": {
+      "type": "http",
+      "url": "https://cloud-brain.bfaglobal.com/mcp"
+    }
+  }
+}
