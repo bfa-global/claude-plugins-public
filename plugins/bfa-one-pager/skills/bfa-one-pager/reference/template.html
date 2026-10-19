@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>BFA cheat sheet template</title>
+
+<!-- Poppins is BFA's sanctioned substitute where Century Gothic is unavailable
+     (brand guidelines p.11 and p.12). Needs an internet connection at print time. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+
+<!-- TEMPLATE-NOTE
+  BFA house style for printable one and two page PDFs.
+  Everything between <style> and </style> is the house style.
+  build_sheet.py strips this comment out of generated sheets.
+-->
+
+<style>
+  /* ============================================================
+     1. THE PALETTE, taken from BFA Global Brand Guidelines 2026.
+        These are the only colours. Do not add more.
+     ============================================================ */
+  :root {
+    /* PRIMARY, brand guidelines p.09. These carry 70 to 80% of the design. */
+    --teal:       #05afaa;  /* BFA primary teal. Exact brand value */
+    --ink:        #142835;  /* BFA primary dark. Exact brand value */
+
+    /* SUPPORTING, brand guidelines p.09. These carry 20 to 30%. */
+    --ink-soft:   #44546a;  /* brand slate. Most paragraph text */
+    --orange:     #db5600;  /* brand orange. Warning rule only */
+    --yellow:     #ffc000;  /* brand yellow. Available, unused by default */
+    --sage:       #94bfbe;  /* brand sage. Available, unused by default */
+
+    /* DERIVED tints of the brand colours. Gradients and tints of the
+       primary and supporting palette are sanctioned, brand guidelines p.20. */
+    --teal-dark:  #048f8b;  /* shade of --teal, for numerals */
+    --teal-tint:  #e6f6f5;  /* tint of --teal, table header fill */
+    --orange-tint:#fbeee6;  /* tint of --orange, warning fill */
+
+    /* NEUTRALS, not brand colours. BFA's greys are #ececec and #aaaaaa.
+       #ececec is too faint for a printed hairline and #aaaaaa fails
+       legibility at 7.8pt, so borders and small text use neutrals. */
+    --surface:    #ffffff;
+    --line:       #d8d8d8;  /* card and table borders */
+    --bg:         #f4f6f6;  /* quote and prompt block fill */
+    --muted:      #7d7d7d;  /* hints and footer text */
+  }
+  /* ============================================================
+     2. PAGE SET UP. A4, no printer margins, colours forced on.
+        Height is 296mm not 297mm on purpose: the 1mm of slack
+        stops a rounding error pushing a blank page out.
+     ============================================================ */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  @page { size: A4; margin: 0; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  body {
+    font-family: "Century Gothic", CenturyGothic, "Poppins", "Trebuchet MS", sans-serif;
+    color: var(--ink);
+    font-size: 9.2pt;
+    line-height: 1.36;
+  }
+
+  .page {
+    width: 210mm;
+    height: 296mm;
+    padding: 10mm 14mm 9mm;
+    page-break-after: always;
+    position: relative;
+    background: var(--surface);
+  }
+  .page:last-child { page-break-after: auto; }
+
+  /* Put class="page tightpage" on a fuller page to shave the spacing. */
+  .tightpage .card      { margin-bottom: 1.9mm; }
+  .tightpage .card-head { padding: 1.8mm 4mm 1.2mm; }
+  .tightpage .card-body { padding-bottom: 2.2mm; }
+  .tightpage .prompt    { font-size: 8.4pt; padding: 2.2mm 3mm; }
+  .tightpage .panel     { padding: 3mm 6mm; }
+
+  /* ============================================================
+     3. HEADER. One per page. Dark band, teal rule underneath.
+     ============================================================ */
+  header {
+    background: var(--ink);
+    color: #fff;
+    border-radius: 6px;
+    padding: 5mm 8mm 4.6mm;
+    margin-bottom: 3.2mm;
+    position: relative;
+    overflow: hidden;
+  }
+  header::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 2.2mm;
+    background: var(--teal);
+  }
+  header h1 { font-size: 19pt; font-weight: 700; letter-spacing: 0.02em; margin-bottom: 1.5mm; }
+  header h1 span { color: var(--teal); }   /* wrap one word or mark in <span> to pick up teal */
+  header .sub { font-size: 9pt; color: #c7d2d6; }
+  /* Keep the title and subtitle clear of the logo. */
+  header h1, header .sub { padding-right: 24mm; }
+
+  /* BFA logo, top right of the band. The band is dark, so this is the white
+     stacked version. There is no current white landscape file, and the brand
+     allows the stacked logo as the alternative chosen on the canvas, at 15mm
+     minimum width (brand guidelines p.06). 16mm here. Do not go below 15mm,
+     and leave the clear space around it alone. */
+  header .logo {
+    position: absolute;
+    top: 5mm;
+    right: 8mm;
+    width: 16mm;
+    height: auto;
+  }
+
+  /* ============================================================
+     4. CARD. The main unit. One idea per card, numbered in order.
+     ============================================================ */
+  .card {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    margin-bottom: 2.6mm;
+    overflow: hidden;
+    break-inside: avoid;
+  }
+  .card-head {
+    display: flex; align-items: baseline; gap: 3mm;
+    padding: 2.2mm 4mm 1.6mm;
+  }
+  .num { color: var(--teal-dark); font-weight: 700; font-size: 12pt; }
+  .card-head h2 { font-size: 11pt; font-weight: 700; color: var(--ink); }
+  .card-head .hint { margin-left: auto; font-size: 8.2pt; color: var(--muted); text-align: right; }
+  .card-body { padding: 0 4mm 2.4mm; }
+  .card-body p { margin-bottom: 1.8mm; color: var(--ink-soft); }
+  .card-body p:last-child { margin-bottom: 0; }
+  .card-body strong { color: var(--ink); }
+
+  /* ============================================================
+     5. LISTS. Always use class="tight".
+     ============================================================ */
+  ul.tight, ol.tight { margin: 0 0 1.8mm 4.5mm; color: var(--ink-soft); }
+  ul.tight li, ol.tight li { margin-bottom: 0.9mm; }
+  ul.tight li:last-child, ol.tight li:last-child { margin-bottom: 0; }
+
+  /* ============================================================
+     6. TABLE. For definitions, comparisons, do-and-do-not.
+     ============================================================ */
+  table.grid { width: 100%; border-collapse: collapse; font-size: 8.8pt; }
+  table.grid th {
+    text-align: left;
+    background: var(--teal-tint);
+    color: var(--ink);
+    font-weight: 700;
+    padding: 1.8mm 3mm;
+    border: 1px solid var(--line);
+  }
+  table.grid td {
+    padding: 1.8mm 3mm;
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    vertical-align: top;
+  }
+  table.grid td strong { color: var(--ink); }
+  table.grid .lead { width: 22%; }   /* narrow first column for term-and-definition rows */
+
+  /* ============================================================
+     7. PROMPT BLOCK, teal. Anything the reader should copy or say.
+     ============================================================ */
+  .prompt {
+    background: var(--bg);
+    border-left: 3px solid var(--teal);
+    border-radius: 0 4px 4px 0;
+    padding: 2.6mm 3.5mm;
+    font-size: 8.8pt;
+    color: var(--ink-soft);
+  }
+  .prompt em { font-style: normal; color: var(--teal-dark); font-weight: 700; }
+  .prompt p { margin-bottom: 1.6mm; }
+  .prompt p:last-child { margin-bottom: 0; }
+
+  /* ============================================================
+     8. NOTE BLOCK, brand orange. Warnings only. One per sheet at most.
+     ============================================================ */
+  .note {
+    background: var(--orange-tint);
+    border-left: 3px solid var(--orange);
+    border-radius: 0 4px 4px 0;
+    padding: 2.4mm 3.5mm;
+    font-size: 8.8pt;
+    color: var(--ink-soft);
+  }
+  .note strong { color: var(--ink); }   /* brand orange fails contrast at 8.8pt, so the label is ink */
+
+  /* ============================================================
+     9. PANEL, dark. The closing call to action. Last block, once.
+     ============================================================ */
+  .panel {
+    background: var(--ink);
+    color: #dbe4e7;
+    border-radius: 6px;
+    padding: 4mm 6mm;
+    break-inside: avoid;
+  }
+  .panel h2 { font-size: 11.5pt; margin-bottom: 2.5mm; color: var(--teal); }
+  .panel p { font-size: 9pt; margin-bottom: 2mm; }
+  .panel p:last-child { margin-bottom: 0; }
+  .panel strong { color: #fff; }
+
+  /* ============================================================
+     10. FOOTER. One per page. Left: what this is. Right: page x of y.
+     ============================================================ */
+  footer {
+    position: absolute;
+    left: 14mm; right: 14mm; bottom: 5mm;
+    display: flex;
+    justify-content: space-between;
+    font-size: 7.8pt;
+    color: var(--muted);
+    border-top: 1px solid var(--line);
+    padding-top: 2mm;
+  }
+
+  code { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 8.2pt; }
+</style>
+</head>
+
+<body>
+
+<!-- ================= PAGE 1 ================= -->
+<div class="page">
+
+  <header>
+    <!-- BFA logo, embedded so the sheet is a single self-contained file. -->
+    <img class="logo" src="data:image/png;base64,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" alt="BFA Global">
+    <h1>Your title here<span>:</span> the take-home sheet</h1>
+    <div class="sub">Where this came from &middot; Date &middot; The one line that says what the reader gets</div>
+  </header>
+
+  <!-- CARD with a table. Good for definitions and comparisons. -->
+  <div class="card">
+    <div class="card-head">
+      <span class="num">1</span>
+      <h2>Card title, short</h2>
+      <span class="hint">the point of this card, a few words</span>
+    </div>
+    <div class="card-body">
+      <table class="grid">
+        <tr><th class="lead">Term</th><td><strong>The short definition.</strong> Then the sentence that makes it useful.</td></tr>
+        <tr><th class="lead">Second term</th><td><strong>The short definition.</strong> Then the sentence that makes it useful.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- CARD with bullets. The workhorse. -->
+  <div class="card">
+    <div class="card-head">
+      <span class="num">2</span>
+      <h2>Card title</h2>
+      <span class="hint">hint</span>
+    </div>
+    <div class="card-body">
+      <ul class="tight">
+        <li><strong>Bold the phrase that carries the point.</strong> Then the rest of the line explains it</li>
+        <li><strong>One idea per bullet.</strong> If it needs a second sentence it probably needs its own bullet</li>
+        <li><strong>Four bullets is usually the limit.</strong> Past that, split the card</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CARD with a prompt block. Anything the reader should copy or say. -->
+  <div class="card">
+    <div class="card-head">
+      <span class="num">3</span>
+      <h2>Something to copy</h2>
+      <span class="hint">plain English, no code</span>
+    </div>
+    <div class="card-body">
+      <p>One line of set up, then the thing itself.</p>
+      <div class="prompt">
+        <p><em>Label:</em> the line the reader would actually type or say.</p>
+        <p><em>Second label:</em> the next line.</p>
+      </div>
+      <p>The pattern: <strong>say what it does in one sentence underneath.</strong></p>
+    </div>
+  </div>
+
+  <!-- CARD with a numbered list and a warning note. -->
+  <div class="card">
+    <div class="card-head">
+      <span class="num">4</span>
+      <h2>Steps or rules</h2>
+      <span class="hint">use ol.tight when order matters</span>
+    </div>
+    <div class="card-body">
+      <ol class="tight">
+        <li><strong>First step.</strong> What to do</li>
+        <li><strong>Second step.</strong> What to do</li>
+      </ol>
+      <div class="note"><strong>Watch out.</strong> The note block is for the thing that goes wrong. One per sheet at most, or it stops being a warning.</div>
+    </div>
+  </div>
+
+  <footer>
+    <span>BFA Global &middot; Series or team name &middot; session x of y</span>
+    <span>Page 1 of 2</span>
+  </footer>
+</div>
+
+<!-- ================= PAGE 2 =================
+     Delete this whole block for a one page sheet, and change the
+     page 1 footer to say "Page 1 of 1".
+     ========================================== -->
+<div class="page tightpage">
+
+  <div class="card">
+    <div class="card-head">
+      <span class="num">5</span>
+      <h2>Page two carries on the numbering</h2>
+      <span class="hint">no second header band</span>
+    </div>
+    <div class="card-body">
+      <p>Page two has no header. It starts straight into the cards, and the numbering runs on from page one.</p>
+    </div>
+  </div>
+
+  <!-- PANEL. The closing block. Always last, always once. -->
+  <div class="panel">
+    <h2>This week</h2>
+    <p>The one thing the reader should go and do. <strong>Name the action, not the topic.</strong> Say when it is due and where it goes.</p>
+  </div>
+
+  <footer>
+    <span>BFA Global &middot; Series or team name &middot; session x of y</span>
+    <span>Page 2 of 2</span>
+  </footer>
+</div>
+
+</body>
+</html>

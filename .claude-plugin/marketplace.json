@@ -20,6 +20,11 @@
       "name": "meeting-followup",
       "source": "./plugins/meeting-followup",
       "description": "Turns a meeting that just happened into its follow-up: agreed actions with owners and dates, and a draft for you to send."
+    },
+    {
+      "name": "bfa-one-pager",
+      "source": "./plugins/bfa-one-pager",
+      "description": "Turns notes, slides, a document or a meeting transcript into a printable one or two page A4 document in the BFA Global house style, with the brand colours, fonts and logo already correct."
     }
   ]
 }

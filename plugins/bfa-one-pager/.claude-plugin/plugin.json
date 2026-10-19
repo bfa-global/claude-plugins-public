@@ -1,0 +1,10 @@
+{
+  "name": "bfa-one-pager",
+  "displayName": "BFA one pager",
+  "version": "1.0.0",
+  "description": "Turns notes, slides, a document or a meeting transcript into a printable one or two page A4 document in the BFA Global house style, with the brand colours, fonts and logo already correct.",
+  "author": {
+    "name": "BFA Global",
+    "url": "https://github.com/bfa-global"
+  }
+}
