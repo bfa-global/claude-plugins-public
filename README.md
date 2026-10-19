@@ -9,6 +9,7 @@ instead.
 | [`cloud-brain-bfa`](plugins/cloud-brain-bfa/) (BFA Brain) | The BFA wiki's connector plus the skill that tells Claude how to use it |
 | [`meeting-prep`](plugins/meeting-prep/) (Meeting prep) | Prepares you for one meeting from your own calendar, mail and notes |
 | [`meeting-followup`](plugins/meeting-followup/) (Meeting follow-up) | Turns a meeting that just happened into agreed actions and a draft follow-up |
+| [`bfa-one-pager`](plugins/bfa-one-pager/) (BFA one pager) | Turns notes, slides, a document or a meeting transcript into a printable one or two page A4 document in the BFA Global house style, with the brand colours, fonts and logo already correct. |
 
 A plugin here holds instructions, and for BFA Brain a connector address, nothing else. Plugins work
 through the connectors you have connected with your own accounts. Installing BFA Brain gives you no
