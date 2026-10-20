@@ -9,12 +9,12 @@ description: >-
   update or remove something they submitted, or mentions the wiki, ingest, submit, a source id, or
   a job id, even when they do not name the tools.
 metadata:
-  version: "1.6.0"
+  version: "1.7.0"
 ---
 
 # The BFA wiki
 
-This is version 1.6.0 of the BFA wiki skill. When the user asks which version of the skill they have, tell them this number.
+This is version 1.7.0 of the BFA wiki skill. When the user asks which version of the skill they have, tell them this number.
 
 The wiki is a knowledge base that the wiki's ingest writes and a person steers. You are the person's hands: you decide what is worth keeping, you hand the source text over, and you answer questions from what is there. The wiki's own ingest, running on the server, reads every source you submit and writes or revises the pages. You never write a page. What the wiki ends up saying about a source is the pipeline's decision, the same as for any other source it has taken in. That split is what keeps every claim traceable to a source and every page consistent with the ones around it.
 
@@ -26,7 +26,7 @@ One fact shapes everything below: **the server only ever sees the text you send 
 
 Before the first read or write in a session, learn the lie of the land once:
 
-- `wiki_documents()` with no arguments lists every wiki (a "space") the user may submit to, and what this identity has already submitted. The `spaces` list is where the `space` value for a submission comes from.
+- `wiki_documents()` with no arguments lists every wiki (a "space") the user may submit to, and what this identity has already submitted. The `spaces` list is where the `space` value for a submission comes from. `summary=True` returns per-channel counts and watermarks instead of the list.
 - `wiki_index()` shows what pages exist. If more than one space is readable, sections are headed `# Space: <name>`.
 
 Everyone at BFA has a personal wiki, and there is one shared BFA wiki that members of staff can read and write. They are different spaces, one submission goes to exactly one of them, and the same source in both is two independent documents. **The personal wiki is always the default.** Submit to the BFA wiki only when the user names it: it is where the organisation's knowledge is meant to accumulate, and it is read by colleagues, so what goes there is a deliberate choice, never a default.
@@ -117,8 +117,8 @@ An article is a source under `web:<canonical url>` with its publication date as 
 
 The server does not poll sources and will not remind anyone. When the user asks what is waiting, or on a cadence they set, sweep:
 
-1. Call `wiki_documents()` and, per `source_type`, note the newest `source_modified_at`. That is the watermark for that channel.
-2. Enumerate each channel the user's connectors reach (meetings, mail, chat) from its watermark to now, and drop anything whose source id is already listed.
+1. Call `wiki_documents(summary=True)`. It returns one row per wiki and `source_type`; that row's `newest_source_modified_at` is the watermark for that channel, and `newest_ingested_at` is when its last ingest finished.
+2. Enumerate each channel the user's connectors reach (meetings, mail, chat) from its watermark to now, and drop anything whose source id `wiki_documents(source_type=<type>, since=<watermark>)` already lists.
 3. Apply the bar above. Present the backlog grouped by channel, one line each, and say how many items you looked past.
 4. Submit what the user picks, then report the job ids and, when they finish, the pages.
 
