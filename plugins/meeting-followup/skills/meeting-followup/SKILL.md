@@ -2,12 +2,16 @@
 name: meeting-followup
 description: >-
   Turns a meeting that has just happened into the follow-up that goes out afterwards, reading the
-  Granola or Zoom notes itself rather than asking for anything to be pasted in. Produces what was
-  agreed with an owner and a date on every item, the open questions nobody answered, and a drafted
-  follow-up email or Slack message for the user to review and send. Use after a meeting: "write up
-  the call", "send the follow-up for my 2pm", "what did we agree in that meeting", "draft the
-  recap", "what are the actions from this morning". For preparing before a meeting use
-  meeting-prep.
+  Granola or Zoom notes itself rather than asking for anything to be pasted in, and checking the
+  CloudBrain wiki (BFA Brain), mail and Slack for what was agreed in earlier sessions and what is
+  already done. Produces what was agreed with an owner and a date on every item, the open
+  questions nobody answered, and, when asked, a drafted follow-up email or Slack message for the
+  user to review and send. Use after a meeting: "write up the call", "send the follow-up for my
+  2pm", "what did we agree in that meeting", "draft the recap", "what are the actions from this
+  morning". Always about one meeting that has already happened: not preparation for one ahead,
+  and not a list of commitments across the day.
+metadata:
+  version: 1.1.0
 ---
 
 Turn one meeting that has already happened into the follow-up that goes out afterwards.
@@ -113,14 +117,82 @@ whose names are in it. Before writing anything:
   A meeting having happened is not evidence of what was said in it, and an invented recap
   sent to five people is the worst failure this skill has available to it.
 
-**Then check what is already known**, so the follow-up does not restate what everyone has.
+**Then check what is already known**, so the follow-up does not restate what everyone has
+and does not chase what is already done.
 
-- **Gmail**, threads with these attendees in the last 14 days. If something agreed in the room
-  has already been sent, mark it done rather than asking for it again.
-- **Prior meetings in the same series**, if the notes reference them. An item carried over
-  from last time is worth naming as carried over.
+- **CloudBrain first.** Up to three `wiki_search` calls, with `include_content=True`: one for
+  each organisation in the room (attendees from one organisation share a search), and one for
+  the meeting's subject or series title. Search a person's name only when the search for their
+  organisation found nothing, or when they have no organisation. The wiki is where prior
+  sessions in this series live once they have been ingested, and it reaches back past the
+  connector window below. An item carried over from three months ago is worth naming as
+  carried over, and the wiki is the only source here that can see it.
 
-**Budget: eight tool calls.** This is written in the ten minutes after a call.
+  Two cautions specific to this skill. **The notes are the source for what was just said, not
+  the wiki.** Written straight after the call, the meeting is not in the wiki yet; written the
+  next day, last night's ingest may already have a page for it. Use such a page only to
+  cross-check, never in place of the notes. And where a page carries a `source_id`, follow it
+  to the original before quoting, at most twice, spent on carried-over commitments and their
+  dates: this document goes to the people who were in the room, and a summary of a summary is
+  how a recap ends up asserting something nobody said.
+
+  **A date from the wiki is not a date from the source.** Measured on 12 October 2026: where a
+  document gave only a month, the wiki's structured timeline supplied the first of that month,
+  with prose beside it reading "no day given". The page is honest where a person reads it and
+  fabricated where a machine reads it. Take only the precision the prose carries, and treat a
+  hedge ("no day given", "approximately", "early", "mid-", "late") as the wiki saying it guessed.
+  Where prose and date field disagree, **the prose wins.**
+
+  This matters more here than anywhere else in the library, because **a due date in a follow-up
+  gets acted on.** This document tells named people what they owe and by when, and it goes to
+  everyone who was in the room. A deadline assembled by an ingest agent, sent out under the
+  reader's name, is a commitment nobody made. Write "end of August" and let someone correct it
+  rather than inventing a Tuesday.
+
+  If CloudBrain is not connected, say so in one line and carry on.
+
+- **Set the connector window.** BFA Brain ingests each user's notes, mail and Slack nightly, so
+  when the wiki knows the people in the room the connectors only need to cover the gap since:
+  **the start of yesterday to now** (one missed night included). When the wiki is not connected
+  or knows nobody in the room, use **the last 14 days**. The skill cannot tell whether last
+  night's ingest ran; the two-day window is the cover for that.
+- **Gmail**, one search: threads with these attendees over the window. If something agreed in
+  the room has already been sent, mark it done rather than asking for it again.
+- **Slack, if connected. Do not skip this.** One search for the attendees and the meeting's
+  subject over the window. Most teams settle things in chat, so a mail-only check reports work
+  that was delivered as still outstanding, and this document would chase someone for it in
+  front of everyone who was in the room. Mark anything delivered or settled in Slack as done
+  and say where. If the follow-up is going to a Slack channel or DM, read the user's own posts
+  there for the register of the draft.
+  **Before calling an ask unanswered, read what came after it.** A search matches words, and a reply often does not repeat them ("sure, booked for tomorrow"). Where a hit is a question or request in a DM or thread, read the messages that follow it before saying nobody answered. A test run reported a colleague's question as unanswered when the reply sat two messages later without the search word in it.
+- **Google Drive, for the document the meeting worked from.** Take the first of these that
+  exists: a file attached to the invite; else a document attached to or named in a mail or
+  Slack message from before the meeting (a plan, an agenda, a deck sent ahead). Mail
+  connectors give attachment names but not their contents, so look the file up in Drive by
+  that name. If it is not in Drive, name it in the read and say it could not be opened. Read
+  it for the questions and proposals it put to the room, and check each against the notes: one
+  the notes settle is Agreed or decided, one they do not mention goes under Open as "the plan
+  asked whether X; the notes record no answer". **The document is never the source for what
+  was agreed.** A plan says what someone proposed; only the notes say what the room accepted.
+
+**Budget: twelve tool calls.** This is written in the ten minutes after a call. Spend them in
+this order:
+
+| Source | Calls |
+| --- | --- |
+| Calendar | 1 |
+| Granola or Zoom: find the meeting, then read the note | 2 |
+| Transcript, only when the note has no action items | 1 |
+| CloudBrain searches | up to 3 |
+| Following a wiki `source_id` to the original | up to 2 |
+| Gmail | 1 |
+| Slack: the search, then what followed an ask it found | up to 2 |
+| Drive: find the document above (none when the invite or a message links it) and read it | up to 2 |
+
+Every row spent adds up to more than twelve, but the transcript and Drive rows are often not
+needed. If you run short, cut from the `source_id` follow-ups first, then the CloudBrain
+searches, then Drive, and name each source you did not reach in the coverage line. The notes, the calendar and the
+"already done" checks in mail and Slack are not optional.
 
 ## How to write it
 
@@ -130,6 +202,8 @@ give neither, it is not an agreement.
 
 - Use the names people used in the room, not email addresses, but spelled as the calendar
   spells them.
+- Refer to people by name; use a pronoun only when a source states it. A first name is not
+  evidence, and neither is a wiki page, whose ingest guesses too. This draft reaches the person.
 - Quote the commitment close to how it was said. A recap that paraphrases everyone into the
   same voice reads as though nobody was actually listening.
 - The user's own items come first in the draft. It reads better to lead with what you owe.
@@ -138,7 +212,7 @@ give neither, it is not an agreement.
 
 **The draft itself**: short, no preamble, no thanks-for-your-time throat clearing. What was
 agreed, who owns it, what is still open, and one line on what happens next. Match the
-register of the user's own sent mail to these people where you can see it.
+register of the user's own sent mail or Slack posts to these people where you can see it.
 
 No em dashes and no en dashes.
 
@@ -182,6 +256,49 @@ user asks for that specifically, and say plainly that nothing has been sent.
 
 ## Finish by
 
-- One line of coverage: which meeting, which note source, how many threads checked.
+- One line of coverage: which meeting, which note source, how many mail threads and Slack
+  threads checked, which document was read, and whether the wiki was connected.
 - The offer: "Want me to adjust the tone, add the next meeting date, or put this in Gmail as
   a draft for you to send?"
+
+## Before you finish: record the run
+
+One call on the skill-telemetry connector, after the output is delivered and before you stop.
+
+**Do not ask for a rating.** The user is about to check and send what you produced, and a
+question after it gets in the way of that. Record the run without one.
+
+Call `submit_feedback` with:
+
+```jsonc
+{
+  "skill":   "meeting-followup",
+  "version": "<metadata.version from this file>",
+  "comment": "not asked",             // or the user's feedback, see below
+  "client":  "claude.ai | Claude Desktop | Claude Code",
+  "extra":   { "agreed": 5, "open": 2, "alreadyDone": 1, "draft": "email | slack | none",
+               "sourcesMissing": ["Slack"] }
+}
+```
+
+`extra` holds counts and the draft type and nothing else. Leave `rating` out.
+
+If the user volunteers feedback on the follow-up in this conversation, unprompted, put it in
+`fixed_by_hand` (what they had to change) or `comment` (anything else), and a rating in
+`rating` only if they gave a number. **Remove every person's name and every company,
+client or project name from their words first**, replacing each with a role ("the client",
+"a colleague"). People describe a fix by naming who it was about, and that name must not
+leave their account.
+
+Two more rules:
+
+- **Never send content.** Not the read, not the draft, not names, not quoted source text, not
+  meeting titles. Counts, the version, and the user's own words with names removed. This runs
+  on material that is confidential by default.
+- **Never fail the run over it.** If the connector is missing or the call errors, say nothing
+  and finish normally. The output is the point; the telemetry is not.
+
+**Why a connector and not a script.** A script reading a key from the environment works on a
+laptop and silently does nothing in claude.ai, which has no shell and no outbound network from
+the code sandbox. Connector traffic goes through Anthropic's servers instead. Measured on
+12 October 2026: the script route reported `feedback not sent` and delivered nothing.

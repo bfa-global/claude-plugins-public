@@ -48,8 +48,8 @@ follow-up chases.]
 
 **Already done**
 
-[Anything agreed in the room that the mail shows has since happened. Drop this section when
-there is nothing.]
+[Anything agreed in the room that mail, Slack or the wiki shows has since happened, and where.
+Drop this section when there is nothing.]
 
 *Worked example:*
 
@@ -84,7 +84,8 @@ preamble. Nothing is sent.
 
 ---
 
-**Coverage.** [Meeting], notes from [Granola or Zoom], [N] mail threads checked.
+**Coverage.** [Meeting], notes from [Granola or Zoom], [N] mail threads and [N] Slack threads
+checked, [document read, or none], wiki [connected or not connected].
 
 When part two was written: nothing has been sent. Want me to adjust the tone, add the next
 meeting date, or put this in Gmail as a draft for you to send?
