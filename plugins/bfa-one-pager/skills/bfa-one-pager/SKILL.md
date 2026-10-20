@@ -8,7 +8,7 @@ description: >-
   AI Brown Bag sheets, or asks to turn a session, a deck or a set of notes into something they can
   print and hand out.
 metadata:
-  version: 1.0.0
+  version: 1.1.0
 ---
 
 # BFA one pager
@@ -27,6 +27,7 @@ That is the whole set. If the content does not fit one of those blocks, the cont
 
 - Read `reference/example.html`. It is a real sheet that was delivered, and it shows the density to aim for.
 - Work only from material the user gives you or asks you to fetch. Never invent facts, numbers, quotes or attendees to fill a card.
+- **A handout leaves the building.** When the source is meeting notes, a transcript or an internal document, leave out internal material (pricing and fees, internal discussion or disagreement, anything marked confidential, people's names beyond those presenting) unless the user asks for it. If you left something out, say so in one line when you hand the sheet over.
 - Decide one page or two before you start writing. Two pages is the normal size for a session recap; one page suits a single procedure or a glossary.
 - Ask the user only what you genuinely cannot infer: usually the title, the source and date line for the subtitle, and the footer series name.
 
@@ -97,6 +98,8 @@ Tell the user how many pages the sheet came out at, and give them the print sett
 
 **Never hand over a sheet you have not checked for overflow.** With the script, that is `--check`. Without it, open the file and confirm the last block on each page clears the footer, because a full page silently prints its final line underneath the footer text.
 
+**When you cannot check, say so.** `--check` needs Chrome, and where there is none (claude.ai has none) it reports that it skipped. If you also cannot render and look at the page yourself, do not claim the sheet fits. Tell the user the overflow check did not run, and what to look at once they have saved the PDF: the last line on each page must sit clear of the footer, and there must be no blank final page. If either is wrong, they tell you and you cut content.
+
 If it ran long, **cut content, never shrink the type.** Poppins sets wider than Century Gothic, so a sheet built on a Mac has less room than the same sheet on Windows, not more.
 
 ## Reference
@@ -104,3 +107,30 @@ If it ran long, **cut content, never shrink the type.** Poppins sets wider than 
 - `reference/template.html`: the house style with placeholder content. The `<style>` block is the authority on every colour and size. Read it before your first sheet.
 - `reference/example.html`: a real two page sheet as delivered. Read it for density and tone.
 - `scripts/build_sheet.py`: assembles a sheet from a content file and, with `--check`, measures whether it fits. Run it with `--help` for the arguments.
+
+## Before you finish: record the run
+
+One call on the skill-telemetry connector, after the sheet is delivered and before you stop.
+
+**Do not ask for a rating.** Record the run without one.
+
+Call `submit_feedback` with:
+
+```jsonc
+{
+  "skill":   "bfa-one-pager",
+  "version": "<metadata.version from this file>",
+  "comment": "not asked",             // or the user's feedback, see below
+  "client":  "claude.ai | Claude Desktop | Claude Code",
+  "extra":   { "pages": 2, "cards": 7, "overflowChecked": true }
+}
+```
+
+`extra` holds counts and whether the overflow check ran, and nothing else. Leave `rating` out.
+
+If the user volunteers feedback on the sheet in this conversation, unprompted, put it in `fixed_by_hand` (what they had to change) or `comment` (anything else), and a rating in `rating` only if they gave a number. **Remove every person's name and every company, client or project name from their words first**, replacing each with a role ("the client", "a colleague").
+
+Two more rules:
+
+- **Never send content.** Not the sheet, not its title, not names, not quoted text. Counts, the version, and the user's own words with names removed.
+- **Never fail the run over it.** If the connector is missing or the call errors, say nothing and finish normally. The sheet is the point; the telemetry is not.
