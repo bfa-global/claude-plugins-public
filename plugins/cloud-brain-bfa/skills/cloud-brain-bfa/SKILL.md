@@ -9,16 +9,16 @@ description: >-
   update or remove something they submitted, or mentions the wiki, ingest, submit, a source id, or
   a job id, even when they do not name the tools.
 metadata:
-  version: "1.7.0"
+  version: "1.7.1"
 ---
 
 # The BFA wiki
 
-This is version 1.7.0 of the BFA wiki skill. When the user asks which version of the skill they have, tell them this number.
+This is version 1.7.1 of the BFA wiki skill. When the user asks which version of the skill they have, tell them this number.
 
 The wiki is a knowledge base that the wiki's ingest writes and a person steers. You are the person's hands: you decide what is worth keeping, you hand the source text over, and you answer questions from what is there. The wiki's own ingest, running on the server, reads every source you submit and writes or revises the pages. You never write a page. What the wiki ends up saying about a source is the pipeline's decision, the same as for any other source it has taken in. That split is what keeps every claim traceable to a source and every page consistent with the ones around it.
 
-The MCP tools carry the whole relationship. Reading: `wiki_search`, `wiki_index`, `wiki_read_page`, `wiki_read_original`, `wiki_glossary`, `ping`. For sources, never for pages: `wiki_submit`, `wiki_job_status`, `wiki_documents`, `wiki_remove_document`. And one setting, a wiki's glossary of known names, which `wiki_set_glossary` replaces; it is not a page either. And two for a wrong fact on a page: `wiki_flag`, which marks a claim as disputed and changes no page, and `wiki_correct`, which hands the right fact to the wiki's own ingest to apply. Their own descriptions are precise about arguments and refusals; this skill is about judgment, which is the part a tool description cannot carry: when to look, what to keep, how to hand it over, and what to say afterwards.
+The MCP tools carry the whole relationship. Reading: `wiki_spaces`, `wiki_search`, `wiki_index`, `wiki_read_page`, `wiki_read_original`, `wiki_glossary`, `ping`. For sources, never for pages: `wiki_submit`, `wiki_job_status`, `wiki_documents`, `wiki_remove_document`. And one setting, a wiki's glossary of known names, which `wiki_set_glossary` replaces; it is not a page either. And two for a wrong fact on a page: `wiki_flag`, which marks a claim as disputed and changes no page, and `wiki_correct`, which hands the right fact to the wiki's own ingest to apply. Their own descriptions are precise about arguments and refusals; this skill is about judgment, which is the part a tool description cannot carry: when to look, what to keep, how to hand it over, and what to say afterwards.
 
 One fact shapes everything below: **the server only ever sees the text you send it.** It has no access to the user's mail, meetings, chats, drives or files, it cannot follow a link, and it cannot open a binary. Capturing a source means putting its text into `wiki_submit`.
 
@@ -26,10 +26,11 @@ One fact shapes everything below: **the server only ever sees the text you send 
 
 Before the first read or write in a session, learn the lie of the land once:
 
-- `wiki_documents()` with no arguments lists every wiki (a "space") the user may submit to, and what this identity has already submitted. The `spaces` list is where the `space` value for a submission comes from. `summary=True` returns per-channel counts and watermarks instead of the list.
+- `wiki_spaces()` lists every wiki (a "space") the user can read, each with its `access` (`write`, or `read` for read-only) and whether it `has_pages` yet. When the user asks which wikis they have, answer from it and say which are read-only.
+- `wiki_documents()` with no arguments lists the wikis the user may submit to, which leaves out read-only ones, and what this identity has already submitted. The `spaces` list is where the `space` value for a submission comes from. `summary=True` returns per-channel counts and watermarks instead of the list.
 - `wiki_index()` shows what pages exist. If more than one space is readable, sections are headed `# Space: <name>`.
 
-Everyone at BFA has a personal wiki, and there is one shared BFA wiki that members of staff can read and write. They are different spaces, one submission goes to exactly one of them, and the same source in both is two independent documents. **The personal wiki is always the default.** Submit to the BFA wiki only when the user names it: it is where the organisation's knowledge is meant to accumulate, and it is read by colleagues, so what goes there is a deliberate choice, never a default.
+Everyone at BFA has a personal wiki, and staff are also members of the shared BFA wiki; some people are members of other organisations' wikis too, and any of these may be read-only for them, which `wiki_spaces` shows. They are different spaces, one submission goes to exactly one of them, and the same source in both is two independent documents. **The personal wiki is always the default.** Submit to the BFA wiki only when the user names it: it is where the organisation's knowledge is meant to accumulate, and it is read by colleagues, so what goes there is a deliberate choice, never a default.
 
 ## Answering from the wiki
 
