@@ -1,0 +1,10 @@
+{
+  "name": "bfa-nightly-ingest",
+  "displayName": "BFA nightly ingest",
+  "version": "0.1.1",
+  "description": "Captures the past day's meetings, mail and Slack conversations into the user's personal BFA Brain wiki overnight, unattended, from a claude.ai scheduled task.",
+  "author": {
+    "name": "BFA Global",
+    "url": "https://github.com/bfa-global"
+  }
+}
